@@ -1,0 +1,553 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="DistributorDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <!--Errors Found During Generation:
+warning 6013: The table/view 'DistributorDB.dbo.__Months' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
+        <EntityType Name="__Months">
+          <Property Name="MonthNumber" Type="tinyint" />
+          <Property Name="MonthName" Type="varchar" MaxLength="20" />
+        </EntityType>-->
+        <EntityType Name="_Order">
+          <Key>
+            <PropertyRef Name="OrderID" />
+          </Key>
+          <Property Name="OrderID" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="OrderDate" Type="datetime" />
+          <Property Name="AgentID" Type="varchar" MaxLength="10" />
+          <Property Name="OrderStatus" Type="varchar" MaxLength="20" />
+          <Property Name="PaymentStatus" Type="varchar" MaxLength="20" />
+          <Property Name="PaymentDate" Type="datetime" />
+          <Property Name="PaymentMethod" Type="varchar" MaxLength="10" />
+          <Property Name="OrderProductTotalBill" Type="money" />
+          <Property Name="OrderDeleted" Type="bit" />
+        </EntityType>
+        <EntityType Name="_User">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="UserName" Type="varchar" MaxLength="100" />
+          <Property Name="UserEmail" Type="varchar" MaxLength="100" />
+          <Property Name="UserPhone" Type="varchar" MaxLength="13" />
+          <Property Name="UserAddress" Type="varchar" MaxLength="100" />
+          <Property Name="UserDeleted" Type="bit" />
+        </EntityType>
+        <EntityType Name="Agent">
+          <Key>
+            <PropertyRef Name="AgentID" />
+          </Key>
+          <Property Name="AgentID" Type="varchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AgentAccount">
+          <Key>
+            <PropertyRef Name="AgentACID" />
+          </Key>
+          <Property Name="AgentACID" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="AgentID" Type="varchar" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="DeliverySlip">
+          <Key>
+            <PropertyRef Name="SlipID" />
+          </Key>
+          <Property Name="SlipID" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="OrderID" Type="varchar" MaxLength="10" />
+          <Property Name="DeliveryDate" Type="datetime" />
+          <Property Name="TotalBill" Type="money" />
+          <Property Name="SlipDeleted" Type="bit" />
+        </EntityType>
+        <EntityType Name="OrderDetail">
+          <Key>
+            <PropertyRef Name="OrderID" />
+            <PropertyRef Name="ProductID" />
+          </Key>
+          <Property Name="OrderID" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="ProductID" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="Quantity" Type="int" />
+        </EntityType>
+        <EntityType Name="Product">
+          <Key>
+            <PropertyRef Name="ProductID" />
+          </Key>
+          <Property Name="ProductID" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="ProductName" Type="varchar" MaxLength="100" />
+          <Property Name="ProductSize" Type="varchar" MaxLength="20" />
+          <Property Name="ProductUnitSize" Type="varchar" MaxLength="10" />
+          <Property Name="ProductBrand" Type="varchar" MaxLength="100" />
+          <Property Name="ProductOrigin" Type="varchar" MaxLength="50" />
+          <Property Name="ProductQuantity" Type="int" />
+          <Property Name="ProductPrice" Type="money" />
+          <Property Name="ProductDeleted" Type="bit" />
+        </EntityType>
+        <EntityType Name="UserAccount">
+          <Key>
+            <PropertyRef Name="UserName" />
+          </Key>
+          <Property Name="UserName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="UserPassword" Type="varchar" MaxLength="50" />
+          <Property Name="Activated" Type="bit" />
+          <Property Name="UserDeleted" Type="bit" />
+        </EntityType>
+        <Association Name="FK___Order__AgentID__45F365D3">
+          <End Role="Agent" Type="Self.Agent" Multiplicity="0..1" />
+          <End Role="_Order" Type="Self._Order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Agent">
+              <PropertyRef Name="AgentID" />
+            </Principal>
+            <Dependent Role="_Order">
+              <PropertyRef Name="AgentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Agent__AgentID__276EDEB3">
+          <End Role="_User" Type="Self._User" Multiplicity="1" />
+          <End Role="Agent" Type="Self.Agent" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="_User">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="Agent">
+              <PropertyRef Name="AgentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__AgentAcco__Agent__31EC6D26">
+          <End Role="UserAccount" Type="Self.UserAccount" Multiplicity="1" />
+          <End Role="AgentAccount" Type="Self.AgentAccount" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="UserAccount">
+              <PropertyRef Name="UserName" />
+            </Principal>
+            <Dependent Role="AgentAccount">
+              <PropertyRef Name="AgentACID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__AgentAcco__Agent__32E0915F">
+          <End Role="_User" Type="Self._User" Multiplicity="0..1" />
+          <End Role="AgentAccount" Type="Self.AgentAccount" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="_User">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="AgentAccount">
+              <PropertyRef Name="AgentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__DeliveryS__SlipD__48CFD27E">
+          <End Role="_Order" Type="Self._Order" Multiplicity="0..1" />
+          <End Role="DeliverySlip" Type="Self.DeliverySlip" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="_Order">
+              <PropertyRef Name="OrderID" />
+            </Principal>
+            <Dependent Role="DeliverySlip">
+              <PropertyRef Name="OrderID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__OrderDeta__Order__4CA06362">
+          <End Role="_Order" Type="Self._Order" Multiplicity="1" />
+          <End Role="OrderDetail" Type="Self.OrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="_Order">
+              <PropertyRef Name="OrderID" />
+            </Principal>
+            <Dependent Role="OrderDetail">
+              <PropertyRef Name="OrderID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__OrderDeta__Produ__4BAC3F29">
+          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="OrderDetail" Type="Self.OrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ProductID" />
+            </Principal>
+            <Dependent Role="OrderDetail">
+              <PropertyRef Name="ProductID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DistributorDBModelStoreContainer">
+          <EntitySet Name="_Order" EntityType="Self._Order" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="_User" EntityType="Self._User" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Agent" EntityType="Self.Agent" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AgentAccount" EntityType="Self.AgentAccount" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DeliverySlip" EntityType="Self.DeliverySlip" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OrderDetail" EntityType="Self.OrderDetail" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Product" EntityType="Self.Product" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserAccount" EntityType="Self.UserAccount" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK___Order__AgentID__45F365D3" Association="Self.FK___Order__AgentID__45F365D3">
+            <End Role="Agent" EntitySet="Agent" />
+            <End Role="_Order" EntitySet="_Order" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Agent__AgentID__276EDEB3" Association="Self.FK__Agent__AgentID__276EDEB3">
+            <End Role="_User" EntitySet="_User" />
+            <End Role="Agent" EntitySet="Agent" />
+          </AssociationSet>
+          <AssociationSet Name="FK__AgentAcco__Agent__31EC6D26" Association="Self.FK__AgentAcco__Agent__31EC6D26">
+            <End Role="UserAccount" EntitySet="UserAccount" />
+            <End Role="AgentAccount" EntitySet="AgentAccount" />
+          </AssociationSet>
+          <AssociationSet Name="FK__AgentAcco__Agent__32E0915F" Association="Self.FK__AgentAcco__Agent__32E0915F">
+            <End Role="_User" EntitySet="_User" />
+            <End Role="AgentAccount" EntitySet="AgentAccount" />
+          </AssociationSet>
+          <AssociationSet Name="FK__DeliveryS__SlipD__48CFD27E" Association="Self.FK__DeliveryS__SlipD__48CFD27E">
+            <End Role="_Order" EntitySet="_Order" />
+            <End Role="DeliverySlip" EntitySet="DeliverySlip" />
+          </AssociationSet>
+          <AssociationSet Name="FK__OrderDeta__Order__4CA06362" Association="Self.FK__OrderDeta__Order__4CA06362">
+            <End Role="_Order" EntitySet="_Order" />
+            <End Role="OrderDetail" EntitySet="OrderDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK__OrderDeta__Produ__4BAC3F29" Association="Self.FK__OrderDeta__Produ__4BAC3F29">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="OrderDetail" EntitySet="OrderDetail" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DistributorDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="C_Order">
+          <Key>
+            <PropertyRef Name="OrderID" />
+          </Key>
+          <Property Name="OrderID" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="OrderDate" Type="DateTime" Precision="3" />
+          <Property Name="AgentID" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="OrderStatus" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="PaymentStatus" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="PaymentDate" Type="DateTime" Precision="3" />
+          <Property Name="PaymentMethod" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="OrderProductTotalBill" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="OrderDeleted" Type="Boolean" />
+          <NavigationProperty Name="Agent" Relationship="Self.FK___Order__AgentID__45F365D3" FromRole="C_Order" ToRole="Agent" />
+          <NavigationProperty Name="DeliverySlips" Relationship="Self.FK__DeliveryS__SlipD__48CFD27E" FromRole="C_Order" ToRole="DeliverySlip" />
+          <NavigationProperty Name="OrderDetails" Relationship="Self.FK__OrderDeta__Order__4CA06362" FromRole="C_Order" ToRole="OrderDetail" />
+        </EntityType>
+        <EntityType Name="C_User">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="UserName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="UserEmail" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="UserPhone" Type="String" MaxLength="13" FixedLength="false" Unicode="false" />
+          <Property Name="UserAddress" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="UserDeleted" Type="Boolean" />
+          <NavigationProperty Name="Agent" Relationship="Self.FK__Agent__AgentID__276EDEB3" FromRole="C_User" ToRole="Agent" />
+          <NavigationProperty Name="AgentAccounts" Relationship="Self.FK__AgentAcco__Agent__32E0915F" FromRole="C_User" ToRole="AgentAccount" />
+        </EntityType>
+        <EntityType Name="Agent">
+          <Key>
+            <PropertyRef Name="AgentID" />
+          </Key>
+          <Property Name="AgentID" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="C_Order" Relationship="Self.FK___Order__AgentID__45F365D3" FromRole="Agent" ToRole="C_Order" />
+          <NavigationProperty Name="C_User" Relationship="Self.FK__Agent__AgentID__276EDEB3" FromRole="Agent" ToRole="C_User" />
+        </EntityType>
+        <EntityType Name="AgentAccount">
+          <Key>
+            <PropertyRef Name="AgentACID" />
+          </Key>
+          <Property Name="AgentACID" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="AgentID" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="C_User" Relationship="Self.FK__AgentAcco__Agent__32E0915F" FromRole="AgentAccount" ToRole="C_User" />
+          <NavigationProperty Name="UserAccount" Relationship="Self.FK__AgentAcco__Agent__31EC6D26" FromRole="AgentAccount" ToRole="UserAccount" />
+        </EntityType>
+        <EntityType Name="DeliverySlip">
+          <Key>
+            <PropertyRef Name="SlipID" />
+          </Key>
+          <Property Name="SlipID" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="OrderID" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="DeliveryDate" Type="DateTime" Precision="3" />
+          <Property Name="TotalBill" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="SlipDeleted" Type="Boolean" />
+          <NavigationProperty Name="C_Order" Relationship="Self.FK__DeliveryS__SlipD__48CFD27E" FromRole="DeliverySlip" ToRole="C_Order" />
+        </EntityType>
+        <EntityType Name="OrderDetail">
+          <Key>
+            <PropertyRef Name="OrderID" />
+            <PropertyRef Name="ProductID" />
+          </Key>
+          <Property Name="OrderID" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ProductID" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Quantity" Type="Int32" />
+          <NavigationProperty Name="C_Order" Relationship="Self.FK__OrderDeta__Order__4CA06362" FromRole="OrderDetail" ToRole="C_Order" />
+          <NavigationProperty Name="Product" Relationship="Self.FK__OrderDeta__Produ__4BAC3F29" FromRole="OrderDetail" ToRole="Product" />
+        </EntityType>
+        <EntityType Name="Product">
+          <Key>
+            <PropertyRef Name="ProductID" />
+          </Key>
+          <Property Name="ProductID" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ProductName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ProductSize" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="ProductUnitSize" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="ProductBrand" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ProductOrigin" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ProductQuantity" Type="Int32" />
+          <Property Name="ProductPrice" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="ProductDeleted" Type="Boolean" />
+          <NavigationProperty Name="OrderDetails" Relationship="Self.FK__OrderDeta__Produ__4BAC3F29" FromRole="Product" ToRole="OrderDetail" />
+        </EntityType>
+        <EntityType Name="UserAccount">
+          <Key>
+            <PropertyRef Name="UserName" />
+          </Key>
+          <Property Name="UserName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="UserPassword" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Activated" Type="Boolean" />
+          <Property Name="UserDeleted" Type="Boolean" />
+          <NavigationProperty Name="AgentAccount" Relationship="Self.FK__AgentAcco__Agent__31EC6D26" FromRole="UserAccount" ToRole="AgentAccount" />
+        </EntityType>
+        <Association Name="FK___Order__AgentID__45F365D3">
+          <End Role="Agent" Type="Self.Agent" Multiplicity="0..1" />
+          <End Role="C_Order" Type="Self.C_Order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Agent">
+              <PropertyRef Name="AgentID" />
+            </Principal>
+            <Dependent Role="C_Order">
+              <PropertyRef Name="AgentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__DeliveryS__SlipD__48CFD27E">
+          <End Role="C_Order" Type="Self.C_Order" Multiplicity="0..1" />
+          <End Role="DeliverySlip" Type="Self.DeliverySlip" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="C_Order">
+              <PropertyRef Name="OrderID" />
+            </Principal>
+            <Dependent Role="DeliverySlip">
+              <PropertyRef Name="OrderID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__OrderDeta__Order__4CA06362">
+          <End Role="C_Order" Type="Self.C_Order" Multiplicity="1" />
+          <End Role="OrderDetail" Type="Self.OrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="C_Order">
+              <PropertyRef Name="OrderID" />
+            </Principal>
+            <Dependent Role="OrderDetail">
+              <PropertyRef Name="OrderID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Agent__AgentID__276EDEB3">
+          <End Role="C_User" Type="Self.C_User" Multiplicity="1" />
+          <End Role="Agent" Type="Self.Agent" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="C_User">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="Agent">
+              <PropertyRef Name="AgentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__AgentAcco__Agent__32E0915F">
+          <End Role="C_User" Type="Self.C_User" Multiplicity="0..1" />
+          <End Role="AgentAccount" Type="Self.AgentAccount" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="C_User">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="AgentAccount">
+              <PropertyRef Name="AgentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__AgentAcco__Agent__31EC6D26">
+          <End Role="UserAccount" Type="Self.UserAccount" Multiplicity="1" />
+          <End Role="AgentAccount" Type="Self.AgentAccount" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="UserAccount">
+              <PropertyRef Name="UserName" />
+            </Principal>
+            <Dependent Role="AgentAccount">
+              <PropertyRef Name="AgentACID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__OrderDeta__Produ__4BAC3F29">
+          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="OrderDetail" Type="Self.OrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ProductID" />
+            </Principal>
+            <Dependent Role="OrderDetail">
+              <PropertyRef Name="ProductID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DistributorDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="C_Order" EntityType="Self.C_Order" />
+          <EntitySet Name="C_User" EntityType="Self.C_User" />
+          <EntitySet Name="Agents" EntityType="Self.Agent" />
+          <EntitySet Name="AgentAccounts" EntityType="Self.AgentAccount" />
+          <EntitySet Name="DeliverySlips" EntityType="Self.DeliverySlip" />
+          <EntitySet Name="OrderDetails" EntityType="Self.OrderDetail" />
+          <EntitySet Name="Products" EntityType="Self.Product" />
+          <EntitySet Name="UserAccounts" EntityType="Self.UserAccount" />
+          <AssociationSet Name="FK___Order__AgentID__45F365D3" Association="Self.FK___Order__AgentID__45F365D3">
+            <End Role="Agent" EntitySet="Agents" />
+            <End Role="C_Order" EntitySet="C_Order" />
+          </AssociationSet>
+          <AssociationSet Name="FK__DeliveryS__SlipD__48CFD27E" Association="Self.FK__DeliveryS__SlipD__48CFD27E">
+            <End Role="C_Order" EntitySet="C_Order" />
+            <End Role="DeliverySlip" EntitySet="DeliverySlips" />
+          </AssociationSet>
+          <AssociationSet Name="FK__OrderDeta__Order__4CA06362" Association="Self.FK__OrderDeta__Order__4CA06362">
+            <End Role="C_Order" EntitySet="C_Order" />
+            <End Role="OrderDetail" EntitySet="OrderDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Agent__AgentID__276EDEB3" Association="Self.FK__Agent__AgentID__276EDEB3">
+            <End Role="C_User" EntitySet="C_User" />
+            <End Role="Agent" EntitySet="Agents" />
+          </AssociationSet>
+          <AssociationSet Name="FK__AgentAcco__Agent__32E0915F" Association="Self.FK__AgentAcco__Agent__32E0915F">
+            <End Role="C_User" EntitySet="C_User" />
+            <End Role="AgentAccount" EntitySet="AgentAccounts" />
+          </AssociationSet>
+          <AssociationSet Name="FK__AgentAcco__Agent__31EC6D26" Association="Self.FK__AgentAcco__Agent__31EC6D26">
+            <End Role="UserAccount" EntitySet="UserAccounts" />
+            <End Role="AgentAccount" EntitySet="AgentAccounts" />
+          </AssociationSet>
+          <AssociationSet Name="FK__OrderDeta__Produ__4BAC3F29" Association="Self.FK__OrderDeta__Produ__4BAC3F29">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="OrderDetail" EntitySet="OrderDetails" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DistributorDBModelStoreContainer" CdmEntityContainer="DistributorDBEntities">
+          <EntitySetMapping Name="C_Order">
+            <EntityTypeMapping TypeName="DistributorDBModel.C_Order">
+              <MappingFragment StoreEntitySet="_Order">
+                <ScalarProperty Name="OrderID" ColumnName="OrderID" />
+                <ScalarProperty Name="OrderDate" ColumnName="OrderDate" />
+                <ScalarProperty Name="AgentID" ColumnName="AgentID" />
+                <ScalarProperty Name="OrderStatus" ColumnName="OrderStatus" />
+                <ScalarProperty Name="PaymentStatus" ColumnName="PaymentStatus" />
+                <ScalarProperty Name="PaymentDate" ColumnName="PaymentDate" />
+                <ScalarProperty Name="PaymentMethod" ColumnName="PaymentMethod" />
+                <ScalarProperty Name="OrderProductTotalBill" ColumnName="OrderProductTotalBill" />
+                <ScalarProperty Name="OrderDeleted" ColumnName="OrderDeleted" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="C_User">
+            <EntityTypeMapping TypeName="DistributorDBModel.C_User">
+              <MappingFragment StoreEntitySet="_User">
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="UserEmail" ColumnName="UserEmail" />
+                <ScalarProperty Name="UserPhone" ColumnName="UserPhone" />
+                <ScalarProperty Name="UserAddress" ColumnName="UserAddress" />
+                <ScalarProperty Name="UserDeleted" ColumnName="UserDeleted" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Agents">
+            <EntityTypeMapping TypeName="DistributorDBModel.Agent">
+              <MappingFragment StoreEntitySet="Agent">
+                <ScalarProperty Name="AgentID" ColumnName="AgentID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AgentAccounts">
+            <EntityTypeMapping TypeName="DistributorDBModel.AgentAccount">
+              <MappingFragment StoreEntitySet="AgentAccount">
+                <ScalarProperty Name="AgentACID" ColumnName="AgentACID" />
+                <ScalarProperty Name="AgentID" ColumnName="AgentID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DeliverySlips">
+            <EntityTypeMapping TypeName="DistributorDBModel.DeliverySlip">
+              <MappingFragment StoreEntitySet="DeliverySlip">
+                <ScalarProperty Name="SlipID" ColumnName="SlipID" />
+                <ScalarProperty Name="OrderID" ColumnName="OrderID" />
+                <ScalarProperty Name="DeliveryDate" ColumnName="DeliveryDate" />
+                <ScalarProperty Name="TotalBill" ColumnName="TotalBill" />
+                <ScalarProperty Name="SlipDeleted" ColumnName="SlipDeleted" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OrderDetails">
+            <EntityTypeMapping TypeName="DistributorDBModel.OrderDetail">
+              <MappingFragment StoreEntitySet="OrderDetail">
+                <ScalarProperty Name="OrderID" ColumnName="OrderID" />
+                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Products">
+            <EntityTypeMapping TypeName="DistributorDBModel.Product">
+              <MappingFragment StoreEntitySet="Product">
+                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="ProductSize" ColumnName="ProductSize" />
+                <ScalarProperty Name="ProductUnitSize" ColumnName="ProductUnitSize" />
+                <ScalarProperty Name="ProductBrand" ColumnName="ProductBrand" />
+                <ScalarProperty Name="ProductOrigin" ColumnName="ProductOrigin" />
+                <ScalarProperty Name="ProductQuantity" ColumnName="ProductQuantity" />
+                <ScalarProperty Name="ProductPrice" ColumnName="ProductPrice" />
+                <ScalarProperty Name="ProductDeleted" ColumnName="ProductDeleted" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserAccounts">
+            <EntityTypeMapping TypeName="DistributorDBModel.UserAccount">
+              <MappingFragment StoreEntitySet="UserAccount">
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="UserPassword" ColumnName="UserPassword" />
+                <ScalarProperty Name="Activated" ColumnName="Activated" />
+                <ScalarProperty Name="UserDeleted" ColumnName="UserDeleted" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

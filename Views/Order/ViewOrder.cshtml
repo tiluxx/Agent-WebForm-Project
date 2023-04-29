@@ -1,0 +1,62 @@
+﻿@using Agent_WebForm_Project.Models;
+@{
+    ViewBag.Title = "ViewOrder";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    if (Session["AgentID"] == null)
+    {
+        Response.Redirect("~/Order/Index");
+    }
+
+    List<C_Order> orderList = ViewBag.OrderList;
+    if (ViewBag.OrderList == null)
+    {
+        orderList = new List<C_Order>();
+    }
+
+    int count = orderList.Count();
+}
+
+<div style="display: flex; justify-content: center; align-items: center">
+    <div class="panel panel-default">
+        <div class="panel-heading text-center">Your orders</div>
+        @{
+            if (count < 1)
+            {
+                <div class="panel-body">
+                    <p>You have not placed any orders yet.</p>
+                </div>
+            }
+            else
+            {
+                <div class="panel-body">
+                    <p>Welcome Agents! These are your current orders.</p>
+                </div>
+
+                <table class="table table-hover">
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Order Date</th>
+                        <th>Order Status</th>
+                        <th>Payment Status</th>
+                        <th>Payment Date</th>
+                        <th>Payment Method</th>
+                        <th>Total Bill</th>
+                    </tr>
+                    @foreach (C_Order order in orderList)
+                    {
+                        <tr>
+                            <td>@order.OrderID</td>
+                            <td>@order.OrderDate</td>
+                            <td>@order.OrderStatus</td>
+                            <td>@order.PaymentStatus</td>
+                            <td>@order.PaymentDate</td>
+                            <td>@order.PaymentMethod</td>
+                            <td>@order.OrderProductTotalBill</td>
+                        </tr>
+                    }
+                </table>
+            }
+        }
+    </div>
+</div>

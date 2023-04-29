@@ -1,0 +1,25 @@
+﻿@using Agent_WebForm_Project.Models;
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    
+}
+
+<div>
+    <h3 class="text-center">View order status</h3>
+    <div style="display: flex; justify-content: center; align-items: center">
+        <div class="panel panel-default">
+            @using (Html.BeginForm("ViewOrderByOrderID", "Order", FormMethod.Post))
+            {
+                    <div class="panel-heading text-center">Enter your order ID to view</div>
+                    <div class="panel-body">
+                        <p>Welcom Agents! Please enter your order ID to view order status</p>
+                    </div>
+                    <div class="editor-field text-center" style="width: 100%">
+                        <input class="text-box single-line text-center" name="OrderID" type="text" value="" />
+                    </div>
+            }
+        </div>
+    </div>
+</div>
