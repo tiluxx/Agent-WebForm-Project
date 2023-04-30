@@ -1,8 +1,52 @@
-﻿
+﻿@model Agent_WebForm_Prodject.Models.UserAccount
 @{
-    ViewBag.Title = "Index";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_Login.cshtml";
 }
 
-<h2>Index</h2>
+@{
+    ViewBag.Title = "Login page";
+}
 
+<div id="login-wrapper">
+    @using (Html.BeginForm("Authorize", "Login", FormMethod.Post))
+    {
+        <table>
+            <tr>
+                <td>&nbsp;</td>
+                <td>Login</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(model => model.UserName)</td>
+                <td>@Html.EditorFor(model => model.UserName)</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>@Html.ValidationMessageFor(model => model.UserName)</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(model => model.UserPassword)</td>
+                <td>@Html.EditorFor(model => model.UserPassword)</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>@Html.ValidationMessageFor(model => model.UserPassword)</td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <label class="field-validation-error">@Html.DisplayFor(model => model.LoginMessageError)</label>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <input id="login-submit-btn" type="submit" value="Login" />
+                    <input id="reset-submit-btn" type="reset" value="Reset" />
+                </td>
+            </tr>
+        </table>
+    }
+</div>
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
