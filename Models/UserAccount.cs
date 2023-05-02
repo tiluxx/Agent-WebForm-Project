@@ -11,14 +11,23 @@ namespace Agent_WebForm_Project.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel;
+    using System.ComponentModel.DataAnnotations;
+
     public partial class UserAccount
     {
+        [DisplayName("Username")]
+        [Required(ErrorMessage = "Please enter your username")]
         public string UserName { get; set; }
+        [DisplayName("Password")]
+        [DataType(DataType.Password)]
+        [Required(ErrorMessage = "Please enter your password")]
         public string UserPassword { get; set; }
         public Nullable<bool> Activated { get; set; }
         public Nullable<bool> UserDeleted { get; set; }
     
         public virtual AgentAccount AgentAccount { get; set; }
+
+        public string LoginMessageError { get; set; }
     }
 }

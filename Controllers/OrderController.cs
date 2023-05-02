@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
 
@@ -24,12 +25,12 @@ namespace Agent_WebForm_Project.Controllers
         // GET: Order/ViewOrder
         public ActionResult ViewOrder()
         {
-            if (Session["AgentID"] == null || Session["AgentID"].Equals(""))
+            if (Session["AgentID"] == null || Session["AgentID"].ToString().Equals(""))
             {
                 return View("Index");
             }
             C_Order order = new C_Order();
-            List<C_Order> orderList = order.SelectOrderQuery();
+            List<C_Order> orderList = order.SelectAgentOrderQuery(Session["AgentID"].ToString());
             ViewBag.OrderList = orderList;
             return View();
         }
@@ -58,7 +59,30 @@ namespace Agent_WebForm_Project.Controllers
             Session["CurrCartList"] = new List<Product>();
             Session["CartQuan"] = 0;
 
-            ViewBag.Message = "Create warehouse receipt successfully";
+            // Send confirm message to email
+            // Get Agent's email
+            C_User agent = new C_User();
+            string agentEmail = agent.GetAgentInfo("UserEmail", agentID);
+            string agentName = agent.GetAgentInfo("UserName", agentID);
+
+            MailMessage mail = new MailMessage();
+            mail.To.Add("work.lethanhtien@gmail.com");
+            mail.From = new MailAddress("lethanhtienhqv@gmail.com");
+            mail.Subject = "Order Confirm Letter";
+            string Body = "Dear " + agentName + ",<br />Thank you for your consideration to choose our service. We are grateful to say that your order is placed successfully and in the way to process.<br />Sincerely, Distributor";
+            mail.Body = Body;
+            mail.IsBodyHtml = true;
+            SmtpClient smtp = new SmtpClient
+            {
+                Host = "smtp.gmail.com",
+                Port = 587,
+                UseDefaultCredentials = false,
+                Credentials = new System.Net.NetworkCredential("lethanhtienhqv@gmail.com", "nhqpbctsxsoqfdxi"),
+                EnableSsl = true
+            };
+            smtp.Send(mail);
+
+            ViewBag.Message = "Place order successfully";
             return View("Result");
         }
 

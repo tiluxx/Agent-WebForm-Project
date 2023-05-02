@@ -21,13 +21,23 @@ namespace Agent_WebForm_Project.Controllers
         // GET: Product/Cart
         public ActionResult Cart()
         {
-            List<Product> productList = new List<Product>();
             if (Session["CurrCartList"] != null)
             {
-                productList = (List<Product>)Session["CurrCartList"];
-
+                List<Product> productList = (List<Product>)Session["CurrCartList"];
+                ViewBag.ProductList = productList;
             }
-            ViewBag.ProductList = productList;
+
+            if (Session["AgentID"] != null)
+            {
+                AgentCart cart = new AgentCart();
+                AgentCartDetail agentCartDetail = new AgentCartDetail();
+                AgentCart agentCart = cart.SelectAgentCartQuery(Session["AgentID"].ToString());
+                if (agentCart.CartID != null)
+                {
+                    List<Product> productList = agentCartDetail.SelectProductCartQuery(agentCart.CartID);
+                    ViewBag.ProductList = productList;
+                }
+            }
             return View();
         }
 
@@ -62,34 +72,6 @@ namespace Agent_WebForm_Project.Controllers
             return View();
         }
 
-        public ActionResult AddToCart(Product product)
-        {
-            if (Session["CurrCartList"] == null)
-            {
-                List<Product> cartList = new List<Product>
-                {
-                    product
-                };
-                Session["CurrCartList"] = cartList;
-                Session["CartQuan"] = cartList.Count();
-            }
-            else
-            {
-                List<Product> cartList = (List<Product>)Session["CurrCartList"];
-                cartList.Add(product);
-                Session["CurrCartList"] = cartList;
-                Session["CartQuan"] = cartList.Count();
-            }
-            return RedirectToAction("Index", "Product");
-        }
 
-        public ActionResult RemoveItemFromCart(Product product)
-        {
-            List<Product> cartList = (List<Product>)Session["CurrCartList"];
-            cartList.RemoveAll(cartItem => cartItem.ProductID == product.ProductID);
-            Session["CurrCartList"] = cartList;
-            Session["CartQuan"] = cartList.Count();
-            return RedirectToAction("Cart", "Product");
-        }
     }
 }

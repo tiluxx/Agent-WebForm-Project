@@ -11,7 +11,9 @@ namespace Agent_WebForm_Project.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.Configuration;
+    using System.Data.SqlClient;
+
     public partial class AgentAccount
     {
         public string AgentACID { get; set; }
@@ -19,5 +21,24 @@ namespace Agent_WebForm_Project.Models
     
         public virtual C_User C_User { get; set; }
         public virtual UserAccount UserAccount { get; set; }
+
+        public string GetAgentID(string username)
+        {
+            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["DBConn"].ToString()))
+            {
+                conn.Open();
+                string sql = "select AgentID from AgentAccount where AgentACID = '" + username + "' or AgentID = '" + username + "'";
+                SqlCommand cmd = new SqlCommand(sql, conn);
+
+                SqlDataReader dr = cmd.ExecuteReader();
+                string res = "";
+                while (dr.Read())
+                {
+                    res = dr["AgentID"].ToString();
+                }
+                conn.Close();
+                return res;
+            }
+        }
     }
 }

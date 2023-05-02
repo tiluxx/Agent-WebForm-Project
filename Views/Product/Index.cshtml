@@ -1,12 +1,21 @@
 ﻿@using Agent_WebForm_Project.Models
 @{
     ViewBag.Title = "Index";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    if (Session["AgentID"] != null)
+    {
+        Layout = "~/Views/Shared/_Logined.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
 
     List<Product> productList = ViewBag.ProductList;
-    if (productList == null)
+
+    string addCartMessage = "";
+    if (ViewBag.AddCartMessage != null)
     {
-        productList = new List<Product>();
+        addCartMessage = (string)ViewBag.AddCartMessage;
     }
 }
 
@@ -15,6 +24,7 @@
         <div class="panel-heading text-center">All current models</div>
         <div class="panel-body">
             <p>Welcome Agents! This is our lastest models. Please choose your products and place orders.</p>
+            <div style="color: red">@addCartMessage</div>
         </div>
 
         <table class="table table-hover">
@@ -30,21 +40,24 @@
             </tr>
             @foreach (Product product in productList)
             {
-                <tr>
-                    <td>
-                        <a class="btn btn-default"
-                           href="@Url.Action("AddToCart", "Product", new { product = product })">
-                            Add to cart
-                        </a>
-                    </td>
-                    <td>@product.ProductID</td>
-                    <td>@product.ProductName</td>
-                    <td>@product.ProductBrand</td>
-                    <td>@product.ProductPrice</td>
-                    <td>@product.ProductOrigin</td>
-                    <td>@product.ProductSize @product.ProductUnitSize</td>
-                    <td>@product.ProductQuantity</td>
-                </tr>
+                if (product != null)
+                {
+                    <tr>
+                        <td>
+                            <a class="btn btn-default"
+                               href="@Url.Action("AddToCart", "Product", product )">
+                                Add to cart
+                            </a>
+                        </td>
+                        <td>@product.ProductID</td>
+                        <td>@product.ProductName</td>
+                        <td>@product.ProductBrand</td>
+                        <td>@product.ProductPrice</td>
+                        <td>@product.ProductOrigin</td>
+                        <td>@product.ProductSize @product.ProductUnitSize</td>
+                        <td>@product.ProductQuantity</td>
+                    </tr>
+                }
             }
         </table>
     </div>

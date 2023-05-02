@@ -19,7 +19,6 @@ namespace Agent_WebForm_Project.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public C_Order()
         {
-            this.DeliverySlips = new HashSet<DeliverySlip>();
             this.OrderDetails = new HashSet<OrderDetail>();
         }
     
@@ -35,18 +34,25 @@ namespace Agent_WebForm_Project.Models
     
         public virtual Agent Agent { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DeliverySlip> DeliverySlips { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
 
-        public List<C_Order> SelectOrderQuery()
+        public string GetPaymentDate
+        {
+            get
+            {
+                return PaymentDate.HasValue ? PaymentDate.Value.ToString("yyyy-MM-dd HH:mm:ss") : "Not Paid";
+            }
+        }
+
+        public List<C_Order> SelectAgentOrderQuery(string agentId)
         {
 
             List<C_Order> res = new List<C_Order>();
             using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["DBConn"].ToString()))
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("select * from _Order", conn);
+                string sql = "select * from _Order where AgentID = '" + agentId + "'";
+                SqlCommand cmd = new SqlCommand(sql, conn);
 
                 SqlDataReader dr = cmd.ExecuteReader();
                 while (dr.Read())
@@ -114,7 +120,7 @@ namespace Agent_WebForm_Project.Models
                 string res = "";
                 while (dr.Read())
                 {
-                    res = dr["WarehouseReceiptID"].ToString();
+                    res = dr["OrderID"].ToString();
                 }
                 conn.Close();
                 return res;
@@ -173,16 +179,9 @@ namespace Agent_WebForm_Project.Models
             {
                 conn.Open();
                 string orderDate = OrderDate.ToString("yyyy-MM-dd HH:mm:ss");
-                string sql = "insert into _Order values ('" +
-                    OrderID +
-                    "', '" + AgentID +
-                    "', '" + OrderStatus +
-                    "', '" + PaymentStatus +
-                    "', '" + PaymentMethod +
-                    "', " + TotalBill +
-                    ", '" + orderDate +
-                    "', " + null +
-                    ", " + 0 + ")";
+                string sql = "insert into _Order" +
+                    " (OrderID, OrderDate, AgentID, OrderStatus, PaymentStatus, PaymentMethod, OrderProductTotalBill, OrderDeleted)" +
+                    " values('" + OrderID + "', '" + orderDate + "', '" + AgentID + "', '" + OrderStatus + "', '" + PaymentStatus + "', '" + PaymentMethod + "', " + TotalBill + ", 0)";
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.ExecuteNonQuery();
                 conn.Close();

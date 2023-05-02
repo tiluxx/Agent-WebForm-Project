@@ -18,6 +18,7 @@ namespace Agent_WebForm_Project.Models
         public Agent()
         {
             this.C_Order = new HashSet<C_Order>();
+            this.AgentCarts = new HashSet<AgentCart>();
         }
     
         public string AgentID { get; set; }
@@ -25,5 +26,7 @@ namespace Agent_WebForm_Project.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<C_Order> C_Order { get; set; }
         public virtual C_User C_User { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<AgentCart> AgentCarts { get; set; }
     }
 }

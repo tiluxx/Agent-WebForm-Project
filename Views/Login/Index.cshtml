@@ -1,13 +1,13 @@
-﻿@model Agent_WebForm_Prodject.Models.UserAccount
+﻿@model Agent_WebForm_Project.Models.UserAccount
 @{
-    Layout = "~/Views/Shared/_Login.cshtml";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 @{
     ViewBag.Title = "Login page";
 }
 
-<div id="login-wrapper">
+<div id="login-wrapper" style="display: flex; justify-content: center; align-items: center;">
     @using (Html.BeginForm("Authorize", "Login", FormMethod.Post))
     {
         <table>
@@ -39,8 +39,8 @@
             <tr>
                 <td></td>
                 <td>
-                    <input id="login-submit-btn" type="submit" value="Login" />
-                    <input id="reset-submit-btn" type="reset" value="Reset" />
+                    <input id="login-submit-btn" class="btn btn-primary" type="submit" value="Login" />
+                    <input id="reset-submit-btn" class="btn btn-default" type="reset" value="Reset" />
                 </td>
             </tr>
         </table>

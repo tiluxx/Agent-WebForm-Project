@@ -1,7 +1,14 @@
 ﻿
 @{
     ViewBag.Title = "Result";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    if (Session["AgentID"] != null)
+    {
+        Layout = "~/Views/Shared/_Logined.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
 
     string message = ViewBag.Message;
 }

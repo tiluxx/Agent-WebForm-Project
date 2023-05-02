@@ -19,6 +19,7 @@ namespace Agent_WebForm_Project.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Product()
         {
+            this.AgentCartDetails = new HashSet<AgentCartDetail>();
             this.OrderDetails = new HashSet<OrderDetail>();
         }
     
@@ -32,6 +33,8 @@ namespace Agent_WebForm_Project.Models
         public Nullable<decimal> ProductPrice { get; set; }
         public Nullable<bool> ProductDeleted { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<AgentCartDetail> AgentCartDetails { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
 

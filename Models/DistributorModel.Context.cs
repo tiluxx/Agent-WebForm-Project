@@ -29,7 +29,8 @@ namespace Agent_WebForm_Project.Models
         public virtual DbSet<C_User> C_User { get; set; }
         public virtual DbSet<Agent> Agents { get; set; }
         public virtual DbSet<AgentAccount> AgentAccounts { get; set; }
-        public virtual DbSet<DeliverySlip> DeliverySlips { get; set; }
+        public virtual DbSet<AgentCart> AgentCarts { get; set; }
+        public virtual DbSet<AgentCartDetail> AgentCartDetails { get; set; }
         public virtual DbSet<OrderDetail> OrderDetails { get; set; }
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<UserAccount> UserAccounts { get; set; }

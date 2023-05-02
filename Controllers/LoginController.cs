@@ -1,5 +1,4 @@
-﻿using Agent_WebForm_Prodject.Models;
-using Agent_WebForm_Project.Models;
+﻿using Agent_WebForm_Project.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,8 +28,22 @@ namespace Agent_WebForm_Prodject.Controllers
                 }
                 else
                 {
-                    StaffAccount staffAccount = new agentAccounts();
-                    Session["StaffID"] = staffAccount.GetStaffID(userAccountModel.UserName);
+                    // Start session
+                    AgentAccount agentAccount = new AgentAccount();
+                    string agentId = agentAccount.GetAgentID(userAccountModel.UserName);
+                    Session["AgentID"] = agentId;
+
+                    // Get the current cart of agent
+                    AgentCart cart = new AgentCart();
+                    AgentCartDetail agentCartDetail = new AgentCartDetail();
+                    AgentCart agentCart = cart.SelectAgentCartQuery(agentId);
+
+                    if (agentCart.CartID != null)
+                    {
+                        List<Product> productList = agentCartDetail.SelectProductCartQuery(agentCart.CartID);
+                        Session["CurrCartList"] = productList;
+                        Session["CartQuan"] = productList.Count();
+                    }
                     return RedirectToAction("Index", "Home");
                 }
             }
@@ -38,8 +51,10 @@ namespace Agent_WebForm_Prodject.Controllers
 
         public ActionResult Logout()
         {
+            Session["AgentID"] = null;
+            Session["CurrCartList"] = null;
             Session.Abandon();
-            return RedirectToAction("Index", "Login");
+            return RedirectToAction("Index", "Home");
         }
     }
 }

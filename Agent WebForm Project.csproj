@@ -118,6 +118,12 @@
       <Private>True</Private>
       <HintPath>packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="xunit.abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>packages\xunit.abstractions.2.0.3\lib\net35\xunit.abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit.core, Version=2.4.2.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>packages\xunit.extensibility.core.2.4.2\lib\net452\xunit.core.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform">
@@ -141,13 +147,16 @@
     <Compile Include="Models\AgentAccount.cs">
       <DependentUpon>DistributorModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\AgentCart.cs">
+      <DependentUpon>DistributorModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AgentCartDetail.cs">
+      <DependentUpon>DistributorModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\C_Order.cs">
       <DependentUpon>DistributorModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\C_User.cs">
-      <DependentUpon>DistributorModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\DeliverySlip.cs">
       <DependentUpon>DistributorModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DistributorModel.Context.cs">
@@ -187,8 +196,8 @@
     <Content Include="Content\Site.css" />
     <Content Include="Models\DistributorModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>DistributorModel.Context.cs</LastGenOutput>
       <DependentUpon>DistributorModel.edmx</DependentUpon>
+      <LastGenOutput>DistributorModel.Context.cs</LastGenOutput>
     </Content>
     <Content Include="Models\DistributorModel.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
@@ -234,6 +243,7 @@
     <Content Include="Views\Order\Result.cshtml" />
     <Content Include="Views\Order\ViewOrder.cshtml" />
     <Content Include="Views\Login\Index.cshtml" />
+    <Content Include="Views\Shared\_Logined.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

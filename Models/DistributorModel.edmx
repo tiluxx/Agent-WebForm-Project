@@ -5,12 +5,6 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
       <Schema Namespace="DistributorDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <!--Errors Found During Generation:
-warning 6013: The table/view 'DistributorDB.dbo.__Months' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
-        <EntityType Name="__Months">
-          <Property Name="MonthNumber" Type="tinyint" />
-          <Property Name="MonthName" Type="varchar" MaxLength="20" />
-        </EntityType>-->
         <EntityType Name="_Order">
           <Key>
             <PropertyRef Name="OrderID" />
@@ -49,15 +43,23 @@ warning 6013: The table/view 'DistributorDB.dbo.__Months' does not have a primar
           <Property Name="AgentACID" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="AgentID" Type="varchar" MaxLength="10" />
         </EntityType>
-        <EntityType Name="DeliverySlip">
+        <EntityType Name="AgentCart">
           <Key>
-            <PropertyRef Name="SlipID" />
+            <PropertyRef Name="CartID" />
           </Key>
-          <Property Name="SlipID" Type="varchar" MaxLength="10" Nullable="false" />
-          <Property Name="OrderID" Type="varchar" MaxLength="10" />
-          <Property Name="DeliveryDate" Type="datetime" />
+          <Property Name="CartID" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="AgentID" Type="varchar" MaxLength="10" />
           <Property Name="TotalBill" Type="money" />
-          <Property Name="SlipDeleted" Type="bit" />
+          <Property Name="CartDeleted" Type="bit" />
+        </EntityType>
+        <EntityType Name="AgentCartDetail">
+          <Key>
+            <PropertyRef Name="CartID" />
+            <PropertyRef Name="ProductID" />
+          </Key>
+          <Property Name="CartID" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="ProductID" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="Quantity" Type="int" />
         </EntityType>
         <EntityType Name="OrderDetail">
           <Key>
@@ -139,15 +141,39 @@ warning 6013: The table/view 'DistributorDB.dbo.__Months' does not have a primar
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__DeliveryS__SlipD__48CFD27E">
-          <End Role="_Order" Type="Self._Order" Multiplicity="0..1" />
-          <End Role="DeliverySlip" Type="Self.DeliverySlip" Multiplicity="*" />
+        <Association Name="FK__AgentCart__Agent__6FE99F9F">
+          <End Role="Agent" Type="Self.Agent" Multiplicity="0..1" />
+          <End Role="AgentCart" Type="Self.AgentCart" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="_Order">
-              <PropertyRef Name="OrderID" />
+            <Principal Role="Agent">
+              <PropertyRef Name="AgentID" />
             </Principal>
-            <Dependent Role="DeliverySlip">
-              <PropertyRef Name="OrderID" />
+            <Dependent Role="AgentCart">
+              <PropertyRef Name="AgentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__AgentCart__CartI__72C60C4A">
+          <End Role="AgentCart" Type="Self.AgentCart" Multiplicity="1" />
+          <End Role="AgentCartDetail" Type="Self.AgentCartDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AgentCart">
+              <PropertyRef Name="CartID" />
+            </Principal>
+            <Dependent Role="AgentCartDetail">
+              <PropertyRef Name="CartID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__AgentCart__Produ__73BA3083">
+          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="AgentCartDetail" Type="Self.AgentCartDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ProductID" />
+            </Principal>
+            <Dependent Role="AgentCartDetail">
+              <PropertyRef Name="ProductID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -180,7 +206,8 @@ warning 6013: The table/view 'DistributorDB.dbo.__Months' does not have a primar
           <EntitySet Name="_User" EntityType="Self._User" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Agent" EntityType="Self.Agent" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AgentAccount" EntityType="Self.AgentAccount" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="DeliverySlip" EntityType="Self.DeliverySlip" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AgentCart" EntityType="Self.AgentCart" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AgentCartDetail" EntityType="Self.AgentCartDetail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OrderDetail" EntityType="Self.OrderDetail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Product" EntityType="Self.Product" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserAccount" EntityType="Self.UserAccount" Schema="dbo" store:Type="Tables" />
@@ -200,9 +227,17 @@ warning 6013: The table/view 'DistributorDB.dbo.__Months' does not have a primar
             <End Role="_User" EntitySet="_User" />
             <End Role="AgentAccount" EntitySet="AgentAccount" />
           </AssociationSet>
-          <AssociationSet Name="FK__DeliveryS__SlipD__48CFD27E" Association="Self.FK__DeliveryS__SlipD__48CFD27E">
-            <End Role="_Order" EntitySet="_Order" />
-            <End Role="DeliverySlip" EntitySet="DeliverySlip" />
+          <AssociationSet Name="FK__AgentCart__Agent__6FE99F9F" Association="Self.FK__AgentCart__Agent__6FE99F9F">
+            <End Role="Agent" EntitySet="Agent" />
+            <End Role="AgentCart" EntitySet="AgentCart" />
+          </AssociationSet>
+          <AssociationSet Name="FK__AgentCart__CartI__72C60C4A" Association="Self.FK__AgentCart__CartI__72C60C4A">
+            <End Role="AgentCart" EntitySet="AgentCart" />
+            <End Role="AgentCartDetail" EntitySet="AgentCartDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK__AgentCart__Produ__73BA3083" Association="Self.FK__AgentCart__Produ__73BA3083">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="AgentCartDetail" EntitySet="AgentCartDetail" />
           </AssociationSet>
           <AssociationSet Name="FK__OrderDeta__Order__4CA06362" Association="Self.FK__OrderDeta__Order__4CA06362">
             <End Role="_Order" EntitySet="_Order" />
@@ -232,7 +267,6 @@ warning 6013: The table/view 'DistributorDB.dbo.__Months' does not have a primar
           <Property Name="OrderProductTotalBill" Type="Decimal" Precision="19" Scale="4" />
           <Property Name="OrderDeleted" Type="Boolean" />
           <NavigationProperty Name="Agent" Relationship="Self.FK___Order__AgentID__45F365D3" FromRole="C_Order" ToRole="Agent" />
-          <NavigationProperty Name="DeliverySlips" Relationship="Self.FK__DeliveryS__SlipD__48CFD27E" FromRole="C_Order" ToRole="DeliverySlip" />
           <NavigationProperty Name="OrderDetails" Relationship="Self.FK__OrderDeta__Order__4CA06362" FromRole="C_Order" ToRole="OrderDetail" />
         </EntityType>
         <EntityType Name="C_User">
@@ -255,6 +289,7 @@ warning 6013: The table/view 'DistributorDB.dbo.__Months' does not have a primar
           <Property Name="AgentID" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="C_Order" Relationship="Self.FK___Order__AgentID__45F365D3" FromRole="Agent" ToRole="C_Order" />
           <NavigationProperty Name="C_User" Relationship="Self.FK__Agent__AgentID__276EDEB3" FromRole="Agent" ToRole="C_User" />
+          <NavigationProperty Name="AgentCarts" Relationship="Self.FK__AgentCart__Agent__6FE99F9F" FromRole="Agent" ToRole="AgentCart" />
         </EntityType>
         <EntityType Name="AgentAccount">
           <Key>
@@ -265,16 +300,27 @@ warning 6013: The table/view 'DistributorDB.dbo.__Months' does not have a primar
           <NavigationProperty Name="C_User" Relationship="Self.FK__AgentAcco__Agent__32E0915F" FromRole="AgentAccount" ToRole="C_User" />
           <NavigationProperty Name="UserAccount" Relationship="Self.FK__AgentAcco__Agent__31EC6D26" FromRole="AgentAccount" ToRole="UserAccount" />
         </EntityType>
-        <EntityType Name="DeliverySlip">
+        <EntityType Name="AgentCart">
           <Key>
-            <PropertyRef Name="SlipID" />
+            <PropertyRef Name="CartID" />
           </Key>
-          <Property Name="SlipID" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="OrderID" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="DeliveryDate" Type="DateTime" Precision="3" />
+          <Property Name="CartID" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="AgentID" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="TotalBill" Type="Decimal" Precision="19" Scale="4" />
-          <Property Name="SlipDeleted" Type="Boolean" />
-          <NavigationProperty Name="C_Order" Relationship="Self.FK__DeliveryS__SlipD__48CFD27E" FromRole="DeliverySlip" ToRole="C_Order" />
+          <Property Name="CartDeleted" Type="Boolean" />
+          <NavigationProperty Name="Agent" Relationship="Self.FK__AgentCart__Agent__6FE99F9F" FromRole="AgentCart" ToRole="Agent" />
+          <NavigationProperty Name="AgentCartDetails" Relationship="Self.FK__AgentCart__CartI__72C60C4A" FromRole="AgentCart" ToRole="AgentCartDetail" />
+        </EntityType>
+        <EntityType Name="AgentCartDetail">
+          <Key>
+            <PropertyRef Name="CartID" />
+            <PropertyRef Name="ProductID" />
+          </Key>
+          <Property Name="CartID" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ProductID" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Quantity" Type="Int32" />
+          <NavigationProperty Name="AgentCart" Relationship="Self.FK__AgentCart__CartI__72C60C4A" FromRole="AgentCartDetail" ToRole="AgentCart" />
+          <NavigationProperty Name="Product" Relationship="Self.FK__AgentCart__Produ__73BA3083" FromRole="AgentCartDetail" ToRole="Product" />
         </EntityType>
         <EntityType Name="OrderDetail">
           <Key>
@@ -300,6 +346,7 @@ warning 6013: The table/view 'DistributorDB.dbo.__Months' does not have a primar
           <Property Name="ProductQuantity" Type="Int32" />
           <Property Name="ProductPrice" Type="Decimal" Precision="19" Scale="4" />
           <Property Name="ProductDeleted" Type="Boolean" />
+          <NavigationProperty Name="AgentCartDetails" Relationship="Self.FK__AgentCart__Produ__73BA3083" FromRole="Product" ToRole="AgentCartDetail" />
           <NavigationProperty Name="OrderDetails" Relationship="Self.FK__OrderDeta__Produ__4BAC3F29" FromRole="Product" ToRole="OrderDetail" />
         </EntityType>
         <EntityType Name="UserAccount">
@@ -321,18 +368,6 @@ warning 6013: The table/view 'DistributorDB.dbo.__Months' does not have a primar
             </Principal>
             <Dependent Role="C_Order">
               <PropertyRef Name="AgentID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__DeliveryS__SlipD__48CFD27E">
-          <End Role="C_Order" Type="Self.C_Order" Multiplicity="0..1" />
-          <End Role="DeliverySlip" Type="Self.DeliverySlip" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="C_Order">
-              <PropertyRef Name="OrderID" />
-            </Principal>
-            <Dependent Role="DeliverySlip">
-              <PropertyRef Name="OrderID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -372,6 +407,18 @@ warning 6013: The table/view 'DistributorDB.dbo.__Months' does not have a primar
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK__AgentCart__Agent__6FE99F9F">
+          <End Role="Agent" Type="Self.Agent" Multiplicity="0..1" />
+          <End Role="AgentCart" Type="Self.AgentCart" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Agent">
+              <PropertyRef Name="AgentID" />
+            </Principal>
+            <Dependent Role="AgentCart">
+              <PropertyRef Name="AgentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK__AgentAcco__Agent__31EC6D26">
           <End Role="UserAccount" Type="Self.UserAccount" Multiplicity="1" />
           <End Role="AgentAccount" Type="Self.AgentAccount" Multiplicity="0..1" />
@@ -381,6 +428,30 @@ warning 6013: The table/view 'DistributorDB.dbo.__Months' does not have a primar
             </Principal>
             <Dependent Role="AgentAccount">
               <PropertyRef Name="AgentACID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__AgentCart__CartI__72C60C4A">
+          <End Role="AgentCart" Type="Self.AgentCart" Multiplicity="1" />
+          <End Role="AgentCartDetail" Type="Self.AgentCartDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AgentCart">
+              <PropertyRef Name="CartID" />
+            </Principal>
+            <Dependent Role="AgentCartDetail">
+              <PropertyRef Name="CartID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__AgentCart__Produ__73BA3083">
+          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="AgentCartDetail" Type="Self.AgentCartDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ProductID" />
+            </Principal>
+            <Dependent Role="AgentCartDetail">
+              <PropertyRef Name="ProductID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -401,17 +472,14 @@ warning 6013: The table/view 'DistributorDB.dbo.__Months' does not have a primar
           <EntitySet Name="C_User" EntityType="Self.C_User" />
           <EntitySet Name="Agents" EntityType="Self.Agent" />
           <EntitySet Name="AgentAccounts" EntityType="Self.AgentAccount" />
-          <EntitySet Name="DeliverySlips" EntityType="Self.DeliverySlip" />
+          <EntitySet Name="AgentCarts" EntityType="Self.AgentCart" />
+          <EntitySet Name="AgentCartDetails" EntityType="Self.AgentCartDetail" />
           <EntitySet Name="OrderDetails" EntityType="Self.OrderDetail" />
           <EntitySet Name="Products" EntityType="Self.Product" />
           <EntitySet Name="UserAccounts" EntityType="Self.UserAccount" />
           <AssociationSet Name="FK___Order__AgentID__45F365D3" Association="Self.FK___Order__AgentID__45F365D3">
             <End Role="Agent" EntitySet="Agents" />
             <End Role="C_Order" EntitySet="C_Order" />
-          </AssociationSet>
-          <AssociationSet Name="FK__DeliveryS__SlipD__48CFD27E" Association="Self.FK__DeliveryS__SlipD__48CFD27E">
-            <End Role="C_Order" EntitySet="C_Order" />
-            <End Role="DeliverySlip" EntitySet="DeliverySlips" />
           </AssociationSet>
           <AssociationSet Name="FK__OrderDeta__Order__4CA06362" Association="Self.FK__OrderDeta__Order__4CA06362">
             <End Role="C_Order" EntitySet="C_Order" />
@@ -425,9 +493,21 @@ warning 6013: The table/view 'DistributorDB.dbo.__Months' does not have a primar
             <End Role="C_User" EntitySet="C_User" />
             <End Role="AgentAccount" EntitySet="AgentAccounts" />
           </AssociationSet>
+          <AssociationSet Name="FK__AgentCart__Agent__6FE99F9F" Association="Self.FK__AgentCart__Agent__6FE99F9F">
+            <End Role="Agent" EntitySet="Agents" />
+            <End Role="AgentCart" EntitySet="AgentCarts" />
+          </AssociationSet>
           <AssociationSet Name="FK__AgentAcco__Agent__31EC6D26" Association="Self.FK__AgentAcco__Agent__31EC6D26">
             <End Role="UserAccount" EntitySet="UserAccounts" />
             <End Role="AgentAccount" EntitySet="AgentAccounts" />
+          </AssociationSet>
+          <AssociationSet Name="FK__AgentCart__CartI__72C60C4A" Association="Self.FK__AgentCart__CartI__72C60C4A">
+            <End Role="AgentCart" EntitySet="AgentCarts" />
+            <End Role="AgentCartDetail" EntitySet="AgentCartDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK__AgentCart__Produ__73BA3083" Association="Self.FK__AgentCart__Produ__73BA3083">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="AgentCartDetail" EntitySet="AgentCartDetails" />
           </AssociationSet>
           <AssociationSet Name="FK__OrderDeta__Produ__4BAC3F29" Association="Self.FK__OrderDeta__Produ__4BAC3F29">
             <End Role="Product" EntitySet="Products" />
@@ -482,14 +562,22 @@ warning 6013: The table/view 'DistributorDB.dbo.__Months' does not have a primar
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="DeliverySlips">
-            <EntityTypeMapping TypeName="DistributorDBModel.DeliverySlip">
-              <MappingFragment StoreEntitySet="DeliverySlip">
-                <ScalarProperty Name="SlipID" ColumnName="SlipID" />
-                <ScalarProperty Name="OrderID" ColumnName="OrderID" />
-                <ScalarProperty Name="DeliveryDate" ColumnName="DeliveryDate" />
+          <EntitySetMapping Name="AgentCarts">
+            <EntityTypeMapping TypeName="DistributorDBModel.AgentCart">
+              <MappingFragment StoreEntitySet="AgentCart">
+                <ScalarProperty Name="CartID" ColumnName="CartID" />
+                <ScalarProperty Name="AgentID" ColumnName="AgentID" />
                 <ScalarProperty Name="TotalBill" ColumnName="TotalBill" />
-                <ScalarProperty Name="SlipDeleted" ColumnName="SlipDeleted" />
+                <ScalarProperty Name="CartDeleted" ColumnName="CartDeleted" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AgentCartDetails">
+            <EntityTypeMapping TypeName="DistributorDBModel.AgentCartDetail">
+              <MappingFragment StoreEntitySet="AgentCartDetail">
+                <ScalarProperty Name="CartID" ColumnName="CartID" />
+                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

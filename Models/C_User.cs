@@ -11,7 +11,9 @@ namespace Agent_WebForm_Project.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.Configuration;
+    using System.Data.SqlClient;
+
     public partial class C_User
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -30,5 +32,25 @@ namespace Agent_WebForm_Project.Models
         public virtual Agent Agent { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AgentAccount> AgentAccounts { get; set; }
+
+        public string GetAgentInfo(string info, string agentId)
+        {
+            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["DBConn"].ToString()))
+            {
+                conn.Open();
+                string sql = "select " + info + " from _User where UserID = '" + agentId + "'";
+                SqlCommand cmd = new SqlCommand(sql, conn);
+
+                SqlDataReader dr = cmd.ExecuteReader();
+
+                string res = "";
+                while (dr.Read())
+                {
+                    res = dr[info].ToString();
+                }
+                conn.Close();
+                return res;
+            }
+        }
     }
 }

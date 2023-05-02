@@ -1,11 +1,18 @@
 ﻿@using Agent_WebForm_Project.Models;
 @{
     ViewBag.Title = "ViewOrder";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-
     if (Session["AgentID"] == null)
     {
         Response.Redirect("~/Order/Index");
+    }
+
+    if (Session["AgentID"] != null)
+    {
+        Layout = "~/Views/Shared/_Logined.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
     }
 
     List<C_Order> orderList = ViewBag.OrderList;
@@ -50,7 +57,7 @@
                             <td>@order.OrderDate</td>
                             <td>@order.OrderStatus</td>
                             <td>@order.PaymentStatus</td>
-                            <td>@order.PaymentDate</td>
+                            <td>@order.GetPaymentDate</td>
                             <td>@order.PaymentMethod</td>
                             <td>@order.OrderProductTotalBill</td>
                         </tr>

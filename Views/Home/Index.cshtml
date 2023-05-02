@@ -1,4 +1,11 @@
 ﻿@{
+    if (Session["AgentID"] != null)
+    {
+        Layout = "~/Views/Shared/_Logined.cshtml";
+    } else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
     ViewBag.Title = "Home Page";
 }
 

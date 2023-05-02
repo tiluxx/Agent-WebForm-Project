@@ -1,4 +1,4 @@
-﻿@{ 
+﻿@{
     int curCartQuan = 0;
     if (Session["CartQuan"] != null)
     {
@@ -27,10 +27,10 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Products", "Index", "Product")</li>s
+                    <li>@Html.ActionLink("Products", "Index", "Product")</li>
                     <li><a href="@Url.Action("Cart", "Product")">Carts <span class="badge">@curCartQuan</span></a></li>
-                    <li>@Html.ActionLink("View orders", "Index", "Order")</li>
-                    <li>@Html.ActionLink("Login", "Index", "Login")</li>
+                    <li>@Html.ActionLink("View orders", "ViewOrder", "Order")</li>
+                    <li><a id="lgout-btn" href="@Url.Action("Logout", "Login")">Logout</a></li>
                 </ul>
             </div>
         </div>
@@ -48,3 +48,4 @@
     @RenderSection("scripts", required: false)
 </body>
 </html>
+
