@@ -13,6 +13,7 @@ namespace Agent_WebForm_Project.Models
     using System.Collections.Generic;
     using System.Configuration;
     using System.Data.SqlClient;
+    using System.Globalization;
 
     public partial class C_Order
     {
@@ -29,6 +30,7 @@ namespace Agent_WebForm_Project.Models
         public string PaymentStatus { get; set; }
         public Nullable<System.DateTime> PaymentDate { get; set; }
         public string PaymentMethod { get; set; }
+        public Nullable<System.Int64> PaymentTransactionNo { get; set; }
         public Nullable<decimal> OrderProductTotalBill { get; set; }
         public Nullable<bool> OrderDeleted { get; set; }
     
@@ -182,6 +184,22 @@ namespace Agent_WebForm_Project.Models
                 string sql = "insert into _Order" +
                     " (OrderID, OrderDate, AgentID, OrderStatus, PaymentStatus, PaymentMethod, OrderProductTotalBill, OrderDeleted)" +
                     " values('" + OrderID + "', '" + orderDate + "', '" + AgentID + "', '" + OrderStatus + "', '" + PaymentStatus + "', '" + PaymentMethod + "', " + TotalBill + ", 0)";
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.ExecuteNonQuery();
+                conn.Close();
+            }
+        }
+
+        public void UpdateOrderQuery(string orderId, long transactionNo, long payDate)
+        {
+            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["DBConn"].ToString()))
+            {
+                DateTime parsedDate;
+                DateTime.TryParseExact(payDate.ToString(), "yyyyMMddHHmmss", null, DateTimeStyles.None, out parsedDate);
+                conn.Open();
+                string sql = "update _Order" +
+                    " set PaymentStatus = 'Payment Received', PaymentTransactionNo = " + transactionNo + ", PaymentDate = '" + parsedDate.ToString() + "'" +
+                    " where OrderID = '" + orderId + "'";
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.ExecuteNonQuery();
                 conn.Close();

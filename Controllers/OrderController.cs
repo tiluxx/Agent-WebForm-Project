@@ -35,6 +35,17 @@ namespace Agent_WebForm_Project.Controllers
             return View();
         }
 
+        public ActionResult VnPaymentResponse(bool status, string message, long transactionNo = 0, long payDate = 0, string orderId = "")
+        {
+            if (status)
+            {
+                C_Order order = new C_Order();
+                order.UpdateOrderQuery(orderId, transactionNo, payDate);
+            }
+            ViewBag.Message = message;
+            return View("Result");
+        }
+
         [HttpPost]
         public ActionResult PlaceOrder()
         {
@@ -81,6 +92,11 @@ namespace Agent_WebForm_Project.Controllers
                 EnableSsl = true
             };
             smtp.Send(mail);
+
+            if (paymentMethod.Equals("VNPay"))
+            {
+                return RedirectToAction("CreatePayment", "Payment", new { amount = totalBill, orderId = newOrderID });
+            }
 
             ViewBag.Message = "Place order successfully";
             return View("Result");
