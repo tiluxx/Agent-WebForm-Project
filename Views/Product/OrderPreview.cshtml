@@ -11,10 +11,10 @@
     }
 
     List<Product> productList = (List<Product>)ViewBag.ProductList;
-    int totalBill = 0;
+    decimal totalBill = 0;
     if (ViewBag.TotalBill != null)
     {
-        totalBill = (int)ViewBag.TotalBill;
+        totalBill = (decimal)ViewBag.TotalBill;
 
     }
     if (productList == null)

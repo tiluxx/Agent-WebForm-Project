@@ -12,17 +12,17 @@ namespace Agent_WebForm_Project.Controllers
     {
         public ActionResult CreatePayment(decimal amount, string orderId)
         {
-            string url = ConfigurationManager.AppSettings["vnp_Url"];
-            string returnUrl = ConfigurationManager.AppSettings["vnp_Returnurl"];
-            string tmnCode = ConfigurationManager.AppSettings["vnp_TmnCode"];
-            string hashSecret = ConfigurationManager.AppSettings["vnp_HashSecret"];
+            string vnpayUrl = ConfigurationManager.AppSettings["vnp_Url"];
+            string vnpayReturnUrl = ConfigurationManager.AppSettings["vnp_Returnurl"];
+            string vnpayTmnCode = ConfigurationManager.AppSettings["vnp_TmnCode"];
+            string vnpayHashSecret = ConfigurationManager.AppSettings["vnp_HashSecret"];
 
             VnPayLibrary pay = new VnPayLibrary();
 
             pay.AddRequestData("vnp_Version", "2.1.0");
             pay.AddRequestData("vnp_Command", "pay");
-            pay.AddRequestData("vnp_TmnCode", tmnCode);
-            pay.AddRequestData("vnp_Amount", (amount * 100).ToString());
+            pay.AddRequestData("vnp_TmnCode", vnpayTmnCode);
+            pay.AddRequestData("vnp_Amount", ((long)(amount * 100)).ToString());
             pay.AddRequestData("vnp_BankCode", "");
             pay.AddRequestData("vnp_CreateDate", DateTime.Now.ToString("yyyyMMddHHmmss")); 
             pay.AddRequestData("vnp_CurrCode", "VND");
@@ -30,10 +30,10 @@ namespace Agent_WebForm_Project.Controllers
             pay.AddRequestData("vnp_Locale", "en"); 
             pay.AddRequestData("vnp_OrderInfo", orderId);
             pay.AddRequestData("vnp_OrderType", "other"); 
-            pay.AddRequestData("vnp_ReturnUrl", returnUrl); 
+            pay.AddRequestData("vnp_ReturnUrl", vnpayReturnUrl); 
             pay.AddRequestData("vnp_TxnRef", DateTime.Now.Ticks.ToString()); 
 
-            string paymentUrl = pay.CreateRequestUrl(url, hashSecret);
+            string paymentUrl = pay.CreateRequestUrl(vnpayUrl, vnpayHashSecret);
 
             return Redirect(paymentUrl);
         }

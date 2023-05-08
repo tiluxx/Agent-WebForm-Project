@@ -80,7 +80,7 @@ namespace Agent_WebForm_Project.Controllers
             mail.To.Add("work.lethanhtien@gmail.com");
             mail.From = new MailAddress("lethanhtienhqv@gmail.com");
             mail.Subject = "Order Confirm Letter";
-            string Body = "Dear " + agentName + ",<br />Thank you for your consideration to choose our service. We are grateful to say that your order is placed successfully and in the way to process.<br />Sincerely, Distributor";
+            string Body = "Dear " + agentName + ",<br /><br />Thank you for your consideration to choose our service. We are grateful to say that your order is placed successfully and in the way to process. This is your ORDER ID to view your order status: " + newOrderID + "<br /><br />Sincerely,<br />Distributor";
             mail.Body = Body;
             mail.IsBodyHtml = true;
             SmtpClient smtp = new SmtpClient

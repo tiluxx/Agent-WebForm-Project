@@ -8,8 +8,8 @@ namespace Agent_WebForm_Project.Services
     public class VnPayLibrary
     {
         public const string VERSION = "2.1.0";
-        private SortedList<String, String> _requestData = new SortedList<String, String>(new VNPayCompare());
-        private SortedList<String, String> _responseData = new SortedList<String, String>(new VNPayCompare());
+        private SortedList<String, String> _requestData = new SortedList<String, String>(new VnPayCompare());
+        private SortedList<String, String> _responseData = new SortedList<String, String>(new VnPayCompare());
 
         public void AddRequestData(string key, string value)
         {

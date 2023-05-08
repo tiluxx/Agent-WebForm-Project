@@ -6,7 +6,7 @@ using System.Web;
 
 namespace Agent_WebForm_Project.Services
 {
-    public class VNPayCompare : IComparer<string>
+    public class VnPayCompare : IComparer<string>
     {
         public int Compare(string x, string y)
         {

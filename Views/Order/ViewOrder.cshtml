@@ -1,10 +1,6 @@
 ﻿@using Agent_WebForm_Project.Models;
 @{
     ViewBag.Title = "ViewOrder";
-    if (Session["AgentID"] == null)
-    {
-        Response.Redirect("~/Order/Index");
-    }
 
     if (Session["AgentID"] != null)
     {
