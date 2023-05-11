@@ -54,14 +54,14 @@ namespace Agent_WebForm_Project.Controllers
                     }
                 }
 
-                long orderId = Convert.ToInt64(pay.GetResponseData("vnp_TxnRef")); //mã hóa đơn
-                long vnpayTranId = Convert.ToInt64(pay.GetResponseData("vnp_TransactionNo")); //mã giao dịch tại hệ thống VNPAY
+                long orderId = Convert.ToInt64(pay.GetResponseData("vnp_TxnRef"));
+                long vnpayTranId = Convert.ToInt64(pay.GetResponseData("vnp_TransactionNo")); 
                 long payDate = Convert.ToInt64(pay.GetResponseData("vnp_PayDate"));
-                string vnp_ResponseCode = pay.GetResponseData("vnp_ResponseCode"); //response code: 00 - thành công, khác 00 - xem thêm https://sandbox.vnpayment.vn/apis/docs/bang-ma-loi/
+                string vnp_ResponseCode = pay.GetResponseData("vnp_ResponseCode"); 
                 string orderInfo = pay.GetResponseData("vnp_OrderInfo"); 
-                string vnp_SecureHash = Request.QueryString["vnp_SecureHash"]; //hash của dữ liệu trả về
+                string vnp_SecureHash = Request.QueryString["vnp_SecureHash"];
 
-                bool checkSignature = pay.ValidateSignature(vnp_SecureHash, hashSecret); //check chữ ký đúng hay không?
+                bool checkSignature = pay.ValidateSignature(vnp_SecureHash, hashSecret); 
 
                 if (checkSignature)
                 {

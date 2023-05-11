@@ -77,7 +77,7 @@ namespace Agent_WebForm_Project.Controllers
             string agentName = agent.GetAgentInfo("UserName", agentID);
 
             MailMessage mail = new MailMessage();
-            mail.To.Add("work.lethanhtien@gmail.com");
+            mail.To.Add(agentEmail);
             mail.From = new MailAddress("lethanhtienhqv@gmail.com");
             mail.Subject = "Order Confirm Letter";
             string Body = "Dear " + agentName + ",<br /><br />Thank you for your consideration to choose our service. We are grateful to say that your order is placed successfully and in the way to process. This is your ORDER ID to view your order status: " + newOrderID + "<br /><br />Sincerely,<br />Distributor";
